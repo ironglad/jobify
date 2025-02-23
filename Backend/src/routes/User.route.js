@@ -1,8 +1,12 @@
 import express from "express"
-import { login, logout, register } from "../controller/User.controller"
+import { login, logout, register, UpdateProfile } from "../controller/User.controller.js"
+import isAuthenticated from "../middlewares/Auth.middle.js"
 
 const router=express()
 
 router.route("/register").post(register)
 router.route("/login").post(login)
-router.route("/logout").post(logout)
+router.route("/logout").get(logout)
+router.route("/profile/update").put(isAuthenticated,UpdateProfile)
+
+export default  router

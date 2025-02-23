@@ -3,6 +3,8 @@ import dotenv from "dotenv"
 import cookieparser from "cookie-parser"
 import cors from "cors"
 import  ConnectDB from "./db.js"
+import userRoutes from "./routes/User.route.js"
+
 
 dotenv.config({})
 
@@ -18,6 +20,10 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieparser())
 app.use(cors(corsOptions ))
+
+
+//routes
+app.use("/api/v1/user",userRoutes)
 
 
 app.listen(PORT,()=>{

@@ -1,4 +1,4 @@
-import { User } from "../models/User.model"
+import { User } from "../models/User.model.js"
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
@@ -16,8 +16,7 @@ try {
         
     }
 
-   const user= User.findOne({email})
-    
+   const user=  await User.findOne({email})
     if(user){
         return res.status(400).json({
             message:"user already existed ",
@@ -30,10 +29,10 @@ try {
     await User.create({
         fullName,
         email,
-        hashedPassword,
+        password:hashedPassword,
         phoneNumber,
         role,
-        Profile
+      
     })
 
     return res.status(201).json({
@@ -49,15 +48,16 @@ try {
 
 const login=async(req,res)=>{
     try {
-        const{email,password,role}=req.body
-        if(!email || !password|| !role){
+
+        const {email,password,role}=req.body
+        if( !email || !password ||!role) {
             return res.status(400).json({
-                message:"something is missing",
+                message:"All fields are required",
                 success:false
             })
+            
         }
-
-        let user= User.findOne({email})
+        const user=  await User.findOne({email})
         if(!user){
             return res.status(400).json({
                 messsage:"Incorrect email or password",
@@ -73,10 +73,10 @@ const login=async(req,res)=>{
             })
         }
 
-        if(role !== user.role){
-            return res.status(400).json({
-                message:"Account does't exits with current role",
-                success:false
+            if(role !== user.role){
+                return res.status(400).json({
+                    message:"Account does't exits with current role",
+                    success:false
             })
         }
 
@@ -84,10 +84,10 @@ const login=async(req,res)=>{
             UserID:user._id
         }
         const token= jwt.sign(
-            TokeData, TOKEN_SECRET_KEY, { expiresIn: "1d" }
+            TokeData, process.env.TOKEN_SECRET_KEY, { expiresIn: "1d" }
         )
 
-        user={
+        const createduser={
             id:user._id,
             fullName:user.fullName,
             email:user.email,
@@ -100,12 +100,13 @@ const login=async(req,res)=>{
             "token",
             token,
             {maxAge: 1*24*60*60*1000,
-            httpsOnly:true,
-            sameSite:'strict'
+            httpOnly:true,
+            sameSite:'strict',
+            secure:true
             }).json({
                 message:`Welcome back ${user.fullName}`,
-                user,
-                success:tue
+                createduser,
+                success:true
             })
 
     } catch (error) {
@@ -128,19 +129,17 @@ const logout= async(req,res)=>{
 
 const UpdateProfile = async(req,res)=>{
     try {
-        const{fullName,email,phoneNumber,bio,skills}=req.body
+        const{fullName,email,phoneNumber,bio,skills,role}=req.body
         const file=req.file
-        if(!fullName|| !email || !phoneNumber ||!bio || !skills) {
-            return res.status(400).json({
-                message:"something went wrong u can't upadate profile",
-                success:false
-            })
-            
-        }
-        const skillsArray= skills.split(",")
-        const userID=req.id
+    
+        
+      let skillsArray
+      if(skills){
+        skillsArray=skills.split(",")
+      } 
+        const userId=req.id
 
-        let user= User.findOne({email})
+        let user= await User.findOne(req.id)
         if(!user){
             return res.status(400).json({
                 messsage:"User not found",
@@ -148,13 +147,16 @@ const UpdateProfile = async(req,res)=>{
             })
         }
         // updating data of user
-        user.fullName=fullName,
-        user.email=email,
-        user.phoneNumber=phoneNumber
-        user.role=role,
-        user.Profile.bio=bio,
-        user.Profile.skills=skillsArray
+        if(fullName) user.fullName=fullName        
+        if(email) user.email=email
+        if(phoneNumber) user.phoneNumber=phoneNumber
+        if(role) user.role=role
+        if(bio) user.Profile.bio=bio
+        if(skills)user.Profile.skills=skillsArray
 
+
+        
+        await user.save()
 
         user={
             id:user._id,
@@ -165,15 +167,16 @@ const UpdateProfile = async(req,res)=>{
             Profile:user.Profile
         }
 
-        await user.save()
+
 
         return res.status(200).json({
             message:"Profile updated successfully",
+            user,
             success:true
         })
 
     } catch (error) {
-        console.log('something went wrong in updateProfile');      
+        console.log('something went wrong in updateProfile',error);      
     }
 }
 
