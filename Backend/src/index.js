@@ -5,6 +5,8 @@ import cors from "cors"
 import  ConnectDB from "./db.js"
 import userRoutes from "./routes/User.route.js"
 import CompanyRoutes from "./routes/Company.route.js"
+import  JobRoute from "./routes/Job.route.js"
+import  ApplicationRoute from "./routes/application.route.js"
 
 
 dotenv.config({})
@@ -24,8 +26,11 @@ app.use(cors(corsOptions ))
 
 
 //routes
-app.use("/api/v1/user",userRoutes)
-app.use("/api/v1/company",CompanyRoutes)
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/company",CompanyRoutes);
+app.use("/api/v1/job", JobRoute);
+app.use("/api/v1/application", ApplicationRoute);
+
 
 app.listen(PORT,()=>{
     ConnectDB()

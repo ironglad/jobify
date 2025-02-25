@@ -27,7 +27,7 @@ const JobSchema= new mongoose.Schema({
         required:true
     },
     jobPostions:{
-        type:String,
+        type:Number,
         required:true
     },
     company:{
