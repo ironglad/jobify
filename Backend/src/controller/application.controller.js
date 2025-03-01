@@ -1,4 +1,4 @@
-import { Job } from "../models/Job.models";
+import { Job } from "../models/Job.models.js";
 import { Applicant } from "../models/Applicant.model.js";
 
 const applyJob = async (req, res) => {
