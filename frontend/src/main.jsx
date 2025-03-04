@@ -14,7 +14,10 @@ import Signup from "./components/auth/Signup";
 import Home from "./components/home/Home";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { Toaster } from "./components/ui/sonner";
 
+import About from "./components/About";
+import Jobs from "./components/Jobs";
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,13 +25,18 @@ const Router = createBrowserRouter(
       <Route path="" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/jobs" element={<Jobs/>} />
+      <Route path="/about" element={<About/>}/>
     </Route>
   )
 );
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}/>
-    <RouterProvider router={Router} />
+    <Provider store={store}>
+      <RouterProvider router={Router} />
+
+    <Toaster />
+    </Provider>
   </StrictMode>
 );
