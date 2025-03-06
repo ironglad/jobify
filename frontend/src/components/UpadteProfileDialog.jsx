@@ -48,6 +48,7 @@ const SubmitHandler=async(e)=>{
   } 
 
   try {
+    setLoading(true)
     const res= await axios.put(`${USER_API_ENDPOINT}/profile/update`,formData,{
       headers:{"Content-Type":"multipart/form-data"},
       withCredentials:true
@@ -60,6 +61,9 @@ const SubmitHandler=async(e)=>{
       }
   } catch (error) {
     console.log(error);
+  }
+  finally{
+    setLoading(false)
   }
   setOpen(false)
 
