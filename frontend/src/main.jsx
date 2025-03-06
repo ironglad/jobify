@@ -18,6 +18,9 @@ import { Toaster } from "./components/ui/sonner";
 
 import About from "./components/About";
 import Jobs from "./components/Jobs";
+import Browse from "./components/Browse";
+import Profile from "./components/Profile";
+import JobDescription from "./components/JobDescription";
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +30,9 @@ const Router = createBrowserRouter(
       <Route path="/signup" element={<Signup />} />
       <Route path="/jobs" element={<Jobs/>} />
       <Route path="/about" element={<About/>}/>
+      <Route path="/browse" element={<Browse/>} />
+      <Route path="/profile" element={<Profile/>}/> 
+      <Route path="/jobDescription/:id" element={<JobDescription/>} />
     </Route>
   )
 );

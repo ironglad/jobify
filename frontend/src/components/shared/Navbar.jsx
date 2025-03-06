@@ -5,15 +5,16 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button, buttonVariants } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Navbar() {
-  const user = false;
+  const {user}=useSelector(store=>store.auth);
   return (
     <div className="bg-[#FBFBFB]">
       <div className=" flex items-center justify-between mx-auto max-w-7xl h-16 ">
         <div>
           <NavLink to="/">
-            <h1 className="text-2xl font-bold">Jobify</h1>
+            <h1 className="text-2xl font-bold"><span className="text-[#6a38c2]">Job</span>ify</h1>
           </NavLink>
         </div>
         <div className="flex items-start gap-12">
@@ -62,7 +63,7 @@ function Navbar() {
                 <div className="flex flex-col text-gray-600">
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     <User2 />
-                    <Button variant="link">View Profile</Button>
+                    <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
                   </div>
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     {" "}

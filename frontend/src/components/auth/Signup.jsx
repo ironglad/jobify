@@ -34,38 +34,9 @@ function Signup() {
     setInput({ ...input, file: e.target.files?.[0] });
   };
 
-  // const SubmitHandler = async (e) => {
-  //   e.preventDefault();
-  //   const formData= new FormData
-  //   formData.append("fullName",input.fullName)
-  //   formData.append("email",input.email)
-  //   formData.append("password",input.password)
-  //   formData.append("phoneNumber",input.phoneNumber)
-  //   formData.append("role",input.role)
-  //   if(input.file){
-  //     formData.append("file",input.file)
-  //   }
-  //   try {
-  //     const res= await axios.post(`${USER_API_ENDPOINT}/register`,formData,{
-  //       headers:{
-  //         "Content-Type":"multipart/form-data"
-  //       },
-  //       withCredentials:true
-  //     })
-  //     if(res.data.success){
-  //       navigate("/login")
-  //       toast.success(res.data.message)
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error(error.res.data.message)
-      
-  //   }
-  // };
-
   const submitHandler = async (e) => {
     e.preventDefault();
-    const formData = new FormData();    //formdata object
+    const formData = new FormData();    
     formData.append("fullName", input.fullName);
     formData.append("email", input.email);
     formData.append("phoneNumber", input.phoneNumber);

@@ -132,7 +132,10 @@ const logout= async(req,res)=>{
 
 const UpdateProfile = async(req,res)=>{
     try {
-        const{fullName,email,phoneNumber,bio,skills,role}=req.body
+        console.log("Incoming Request Body:", req.body)
+        const{fullName,email,phoneNumber,bio,skills}=req.body
+        console.log(fullName,email,phoneNumber,bio,skills);
+        
         const file=req.file
     
         
@@ -153,7 +156,7 @@ const UpdateProfile = async(req,res)=>{
         if(fullName) user.fullName=fullName        
         if(email) user.email=email
         if(phoneNumber) user.phoneNumber=phoneNumber
-        if(role) user.role=role
+        // if(role) user.role=role
         if(bio) user.Profile.bio=bio
         if(skills)user.Profile.skills=skillsArray
 

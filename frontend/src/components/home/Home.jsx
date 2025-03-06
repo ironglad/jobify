@@ -3,6 +3,7 @@ import Navbar from '../shared/Navbar'
 import HeroSection from '../HeroSection'
 import Category from '../Category'
 import LastesJob from '../LastesJob'
+import Footer from '../shared/Footer'
 
 
 function Home() {
@@ -11,6 +12,7 @@ function Home() {
         <HeroSection/>
         <Category/>
         <LastesJob/>
+        <Footer/>
     </div>
   )
 }

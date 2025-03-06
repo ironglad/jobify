@@ -4,9 +4,9 @@ import { devtools } from "globals";
 
 const store = configureStore({
     reducer: {
-        auth: authSlice,  // Correct reducer setup
+        auth: authSlice,  
     },
-    devTools: process.env.NODE_ENV !== "production",  // ✅ Enable Redux DevTools in development mode
+    devTools: process.env.NODE_ENV !== "production",  
 });
 
 export default store
