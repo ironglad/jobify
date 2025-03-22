@@ -13,7 +13,7 @@ const ApplicantSchema=new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:["Accepted","Pending","Rejected"],
+        enum:['Pending', 'accepted', 'rejected'],
         default:"Pending"
     }
     

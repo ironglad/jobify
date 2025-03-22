@@ -8,15 +8,17 @@ import AppliedJobTable from "./AppliedJobTable";
 import UpadteProfileDialog from "./UpadteProfileDialog";
 import { useSelector } from "react-redux";
 import store from "@/redux/store";
+import useGetAppliedJob from "@/customHooks/useGetAppliedJob";
 
 function Profile() {
+  useGetAppliedJob()
   const [open, setOpen] = useState(false);
   const isResume = true;
   // const Skills = ["javascripts", "Aws", "Docker", "Html", "css", "DBMS"];
   const user = useSelector((store) => store.auth.user);
 
   
-  console.log("Profile Photo URL:", user?.Profile?.profilePhoto);
+  console.log("Profile Photo URL:", user?.Profile?.profilePhote);
   
   return (
     <div>

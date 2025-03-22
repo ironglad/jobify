@@ -12,24 +12,23 @@ import { setUser } from "@/redux/authSlicer";
 import { toast } from "sonner";
 
 function Navbar() {
-  const {user}=useSelector(store=>store.auth);
-  console.log("user in nav",user);
-  
-  const dispatch=useDispatch()
-  const navigate=useNavigate()
-  const LogOutHandler=async()=>{
+  const { user } = useSelector(store => store.auth);
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const LogOutHandler = async () => {
     try {
-      const res= await axios.get(`${USER_API_ENDPOINT}/logout`,{withCredentials:true})
-      if(res.data.success){
+      const res = await axios.get(`${USER_API_ENDPOINT}/logout`, { withCredentials: true })
+      if (res.data.success) {
         dispatch(setUser(null));
         navigate("/")
         toast.success(res.data.message)
       }
 
     } catch (error) {
-      console.log("error in logout",error);
+      console.log("error in logout", error);
       toast.error(error.response?.data?.message || "Something went wrong");
-      
+
     }
   }
   return (
@@ -42,10 +41,24 @@ function Navbar() {
         </div>
         <div className="flex items-start gap-12">
           <ul className=" flex font-medium items-center gap-4">
-            <li><Link  to="/">Home</Link></li>
-            <li><Link to="/jobs">Job</Link></li>
-            <li><Link to='/browse'>browse</Link></li>
-            <li><Link to='/about'>About Us</Link></li>
+
+            {
+              user && user.role == 'recruiter' ? (
+                <>
+                  <li><Link to="/admin/companies">Companies</Link></li>
+                  <li><Link to="/admin/jobs">Job</Link></li>
+                </>
+              ) : (
+                <>
+                  <li><Link to="/">Home</Link></li>
+                  <li><Link to="/jobs">Job</Link></li>
+                  <li><Link to='/browse'>Browse</Link></li>
+                  <li><Link to='/about'>About Us</Link></li>
+                </>
+              )
+            }
+
+
           </ul>
           {!user ? (
             <div className="flex items-center gap-2 ">
@@ -54,7 +67,7 @@ function Navbar() {
               </Link>
               <Link to="/signup">
                 <Button className="bg-[#aea2ec] hover:bg-[#a596f3] rounded-md">
-                  SingUp
+                  SignUp
                 </Button>
               </Link>
             </div>
@@ -63,7 +76,7 @@ function Navbar() {
               <PopoverTrigger asChild>
                 <Avatar className="cursor-pointer">
                   <AvatarImage
-                    src={user?.Profile?.profilePhote }
+                    src={user?.Profile?.profilePhote}
                     alt="shadn"
                   />
                 </Avatar>
@@ -72,7 +85,7 @@ function Navbar() {
                 <div className="flex gap-2 space-y-2">
                   <Avatar className="cursor-pointer">
                     <AvatarImage
-                      src={user?.Profile?.profilePhote }
+                      src={user?.Profile?.profilePhote}
                       alt="shadn"
                     />
                   </Avatar>
@@ -84,10 +97,17 @@ function Navbar() {
                   </div>
                 </div>
                 <div className="flex flex-col text-gray-600">
-                  <div className="flex w-fit items-center gap-2 cursor-pointer">
-                    <User2 />
-                    <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
-                  </div>
+
+                  {
+                    user && user.role == "student" && (
+                      <div className="flex w-fit items-center gap-2 cursor-pointer">
+                        <User2 />
+                        <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
+                      </div>
+                    )
+                  }
+
+
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     {" "}
                     <LogOut />

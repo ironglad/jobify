@@ -1,14 +1,12 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ... */
-
-
-
-@layer base {}
-
-
+:root {
+  --muted: 220, 14%, 96%; /* Light gray */
+  --muted-foreground: 220, 9%, 46%; /* Adjust to fit your theme */
+}
 
 @layer base {
   * {
@@ -19,8 +17,14 @@
   }
 }
 
+/* Custom styles for SelectContent */
+.SelectContent {
+  top: 100% !important; /* Force the dropdown to open below the trigger */
+  bottom: auto !important; /* Disable upward opening */
+} 
 
-:root {
-  --muted: 220, 14%, 96%; /* Light gray */
-  --muted-foreground: 220, 9%, 46%; /* Adjust to fit your theme */
+/* Custom class for opaque background */
+.opaque-background {
+  background-color: white; /* Set background color */
+  opacity: 1; /* Ensure full opacity */
 }

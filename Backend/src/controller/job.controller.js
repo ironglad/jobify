@@ -1,9 +1,12 @@
+
 import { Job } from "../models/Job.models.js";
 
 // admin post krega job
 export const postJob = async (req, res) => {
     try {
         const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
+        console.log(title, description, requirements, salary, location, jobType, experience, position, companyId);
+        
         const userId = req.id;
 
         if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
@@ -57,7 +60,7 @@ export const getAllJobs = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log(error);
+        console.log("not abele to get all jobs",error);
     }
 }
 // student
@@ -75,7 +78,7 @@ export const getJobById = async (req, res) => {
         };
         return res.status(200).json({ job, success: true });
     } catch (error) {
-        console.log(error);
+        console.log("not able to get job by this id",error);
     }
 }
 // admin kitne job create kra hai abhi tk

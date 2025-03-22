@@ -16,10 +16,10 @@ const register = async (req, res) => {
         success: false,
       });
     }
-    console.log("Uploaded File:", req.file);
+
     const file= req.file
     const fileUri=getDataUri(file)
-    console.log(fileUri);
+
     
     const CloudResponse= await cloudinary.uploader.upload(fileUri.content,{
         resource_type:"image",
@@ -134,45 +134,116 @@ const logout = async (req, res) => {
   }
 };
 
+// const UpdateProfile = async (req, res) => {
+//   try {
+//     const { fullName, email, phoneNumber, bio, skills } = req.body;
+
+//     const file = req.file;
+//     const fileUri = getDataUri(file);
+//     const CloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+//       resource_type: "raw",
+//     });
+
+//     let skillsArray;
+//     if (skills) {
+//       skillsArray = skills.split(",");
+//     }
+//     const userId = req.id;
+
+//     let user = await User.findOne(req.id);
+//     if (!user) {
+//       return res.status(400).json({
+//         messsage: "User not found",
+//         success: false,
+//       });
+//     }
+//     // updating data of user
+//     if (fullName) user.fullName = fullName;
+//     if (email) user.email = email;
+//     if (phoneNumber) user.phoneNumber = phoneNumber;
+//     // if(role) user.role=role
+//     if (bio) user.Profile.bio = bio;
+//     if (skills) user.Profile.skills = skillsArray;
+
+//     if (CloudResponse) {
+//       user.Profile.resume = CloudResponse.secure_url;
+//       user.Profile.resumeOriginalName = file.originalname;
+//     }
+
+//     await user.save();
+
+//     user = {
+//       id: user._id,
+//       fullName: user.fullName,
+//       email: user.email,
+//       phoneNumber: user.phoneNumber,
+//       role: user.role,
+//       Profile: user.Profile,
+//     };
+
+//     return res.status(200).json({
+//       message: "Profile updated successfully",
+//       user,
+//       success: true,
+//     });
+//   } catch (error) {
+//     console.log("something went wrong in updateProfile", error);
+//   }
+// };
 const UpdateProfile = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, bio, skills } = req.body;
 
+    // Handle file upload
     const file = req.file;
+    if (!file) {
+      return res.status(400).json({
+        message: "Resume file is required",
+        success: false,
+      });
+    }
+
     const fileUri = getDataUri(file);
     const CloudResponse = await cloudinary.uploader.upload(fileUri.content, {
       resource_type: "raw",
     });
 
+    // Convert skills string to array
     let skillsArray;
     if (skills) {
       skillsArray = skills.split(",");
     }
+
+    // Get user ID from request
     const userId = req.id;
 
-    let user = await User.findOne(req.id);
+    // Find the user by ID
+    let user = await User.findOne({ _id: userId }); // Use a filter object
     if (!user) {
-      return res.status(400).json({
-        messsage: "User not found",
+      return res.status(404).json({
+        message: "User not found",
         success: false,
       });
     }
-    // updating data of user
+
+    // Update user data
     if (fullName) user.fullName = fullName;
     if (email) user.email = email;
     if (phoneNumber) user.phoneNumber = phoneNumber;
-    // if(role) user.role=role
     if (bio) user.Profile.bio = bio;
     if (skills) user.Profile.skills = skillsArray;
 
+    // Update resume if file is uploaded
     if (CloudResponse) {
       user.Profile.resume = CloudResponse.secure_url;
       user.Profile.resumeOriginalName = file.originalname;
     }
 
+    // Save the updated user
     await user.save();
 
-    user = {
+    // Prepare the response
+    const updatedUser = {
       id: user._id,
       fullName: user.fullName,
       email: user.email,
@@ -183,11 +254,15 @@ const UpdateProfile = async (req, res) => {
 
     return res.status(200).json({
       message: "Profile updated successfully",
-      user,
+      user: updatedUser,
       success: true,
     });
   } catch (error) {
-    console.log("something went wrong in updateProfile", error);
+    console.error("Something went wrong in UpdateProfile:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
   }
 };
 

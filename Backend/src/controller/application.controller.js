@@ -3,8 +3,11 @@ import { Applicant } from "../models/Applicant.model.js";
 
 const applyJob = async (req, res) => {
   try {
-    const userId = req.id;
+    const userId =req.id;
+
     const jobId = req.params.id;
+  
+    
     if (!jobId) {
       return res.status(400).json({
         message: "job doest not  exist",
@@ -43,15 +46,15 @@ const applyJob = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log("something went wrong while creating job");
+    console.log("something went wrong while applying for job",error);
   }
 };
 
 const getAppliedJob=async(req,res)=>{
     try {
-        userId=req.id
-        const applications = await Applicant.findOne({applicant:userId}).sort({createdAt:-1}).populate({
-            path:"Job",
+        const userId=req.id
+        const application = await Applicant.find({applicant:userId}).sort({createdAt:-1}).populate({
+            path:"job",
             options:{sort:{createdAt:-1}},
             populate:{
                 path:"company",
@@ -59,7 +62,7 @@ const getAppliedJob=async(req,res)=>{
             }
 
         })
-        if(!applications){
+        if(!application){
             return res.status(400).json({
                 message:"no Applications",
                 success:false
@@ -67,8 +70,8 @@ const getAppliedJob=async(req,res)=>{
         }
 
         return res.status(200).json({
-            applications,
-            succuss:true
+            application,
+            success:true
         })
         
     } catch (error) {
@@ -82,13 +85,15 @@ const getApplicants= async(req,res)=>{
     try {
         const jobID=req.params.id
         const job= await Job.findById(jobID).populate({
-            path:"Applicant",
+            path:"applications",
             options:{sort:{createdAt:-1}},
             populate:{
                 path:"applicant",
                 options:{sort:{createdAt:-1}}
             }
         })
+        console.log(job);
+        
         if(!job){
             return res.status(400).json({
                 message:"job not found",
@@ -102,12 +107,14 @@ const getApplicants= async(req,res)=>{
         })
 
     } catch (error) {
-        
+      console.log(error);
     }
 }
 
 const updateStatus=async(req,res)=>{
     try {
+      console.log("body",req.body);
+      
         const {status}=req.body
         const applicationId=req.params.id
         if(!status){
@@ -134,7 +141,7 @@ const updateStatus=async(req,res)=>{
             success:true
         })
     } catch (error) {
-        console.log();
+        console.log("not able to update the status",error);
         
     }
 }
